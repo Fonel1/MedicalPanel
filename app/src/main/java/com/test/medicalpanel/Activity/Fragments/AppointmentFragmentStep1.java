@@ -3,6 +3,7 @@ package com.test.medicalpanel.Activity.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,8 +25,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.test.medicalpanel.Activity.Adapter.ClinicAdapter;
+import com.test.medicalpanel.Activity.Common.Common;
 import com.test.medicalpanel.Activity.Common.SpacesItemDecoration;
-import com.test.medicalpanel.Activity.Interface.IALLSalonLoadListener;
+import com.test.medicalpanel.Activity.Interface.IAllSalonLoadListener;
 import com.test.medicalpanel.Activity.Interface.IClinicsLoadListener;
 import com.test.medicalpanel.Activity.Model.Clinic;
 import com.test.medicalpanel.R;
@@ -38,12 +40,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class AppointmentFragmentStep1 extends Fragment implements IALLSalonLoadListener, IClinicsLoadListener {
+public class AppointmentFragmentStep1 extends Fragment implements IAllSalonLoadListener, IClinicsLoadListener {
 
     CollectionReference allClinicsRef;
     CollectionReference clinicRef;
 
-    IALLSalonLoadListener iAllSalonLoadListener;
+    IAllSalonLoadListener iAllSalonLoadListener;
     IClinicsLoadListener iClinicsLoadListener;
 
     @BindView(R.id.spinner_clinc)
@@ -63,7 +65,7 @@ public class AppointmentFragmentStep1 extends Fragment implements IALLSalonLoadL
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         allClinicsRef = FirebaseFirestore.getInstance().collection("AllClinics");
@@ -79,7 +81,6 @@ public class AppointmentFragmentStep1 extends Fragment implements IALLSalonLoadL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_appointment_step1, container, false);
-
         unbinder = ButterKnife.bind(this, fragmentView);
 
         initView();
@@ -134,6 +135,8 @@ public class AppointmentFragmentStep1 extends Fragment implements IALLSalonLoadL
     }
 
     private void loadClinicOfCity(String cityName) {
+
+        Common.city = cityName;
 
         clinicRef = FirebaseFirestore.getInstance()
                 .collection("AllClinics")

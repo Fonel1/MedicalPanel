@@ -2,6 +2,7 @@ package com.test.medicalpanel.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.AccountAuthenticatorActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +11,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.android.gms.common.internal.AccountAccessor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.test.medicalpanel.Activity.Common.Common;
 import com.test.medicalpanel.R;
 
+import butterknife.BindView;
 
-public class MainActivity extends AppCompatActivity {
 
-    Button btnLogOut, btnMakeAnApointment;
+public class  MainActivity extends AppCompatActivity {
+
+    Button btnLogOut, btnMakeAnApointment, btn_update_information;
     FirebaseAuth mAuth;
     Spinner spinnerSTR;
 
@@ -32,9 +39,14 @@ public class MainActivity extends AppCompatActivity {
         spinnerSTR = findViewById(R.id.spinnerSTR);
         populateSpinnerSTR();
         btnMakeAnApointment = findViewById(R.id.btnMakeAppointment);
+        btn_update_information = findViewById(R.id.btn_update_information);
 
         btnMakeAnApointment.setOnClickListener(view -> {
             startActivity(new Intent(this, AppointmentActivity.class));
+        });
+
+        btn_update_information.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, UpdateInformationUser.class));
         });
 
         btnLogOut.setOnClickListener(view -> {

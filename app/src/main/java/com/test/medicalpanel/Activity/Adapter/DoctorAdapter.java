@@ -1,12 +1,11 @@
 package com.test.medicalpanel.Activity.Adapter;
 
-import com.test.medicalpanel.Activity.Common.Common;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,58 +13,62 @@ import androidx.cardview.widget.CardView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-//import com.google.android.gms.common.internal.service.Common;
+import com.test.medicalpanel.Activity.Common.Common;
 import com.test.medicalpanel.Activity.Interface.IRecyclerItemSelectedListener;
-import com.test.medicalpanel.Activity.Model.Clinic;
+import com.test.medicalpanel.Activity.Model.Doctor;
 import com.test.medicalpanel.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClinicAdapter extends RecyclerView.Adapter<ClinicAdapter.MyViewHolder> {
+public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.MyViewHolder> {
 
     Context context;
-    List<Clinic> clinicsList;
+    List<Doctor> doctorList;
     List<CardView> cardViewList;
     LocalBroadcastManager localBroadcastManager;
 
-    public ClinicAdapter(Context context, List<Clinic> clinicList) {
+    public DoctorAdapter(Context context, List<Doctor> doctorList) {
         this.context = context;
-        this.clinicsList = clinicList;
+        this.doctorList = doctorList;
         cardViewList = new ArrayList<>();
-        localBroadcastManager= LocalBroadcastManager.getInstance(context); //by this we give information to app that we already selected clinic
+        localBroadcastManager = LocalBroadcastManager.getInstance(context);
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context)
-                .inflate(R.layout.layout_clinic, parent, false);
+                .inflate(R.layout.layout_doctor, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.txt_clinic_name.setText(clinicsList.get(position).getName());
-        holder.txt_clinic_address.setText(clinicsList.get(position).getAddress());
-
-        if (!cardViewList.contains(holder.card_clinic))
-            cardViewList.add(holder.card_clinic);
+        holder.txt_doctor_name.setText(doctorList.get(position).getName());
+        holder.ratingBar.setRating((float)doctorList.get(position).getRating());
+        if (!cardViewList.contains(holder.card_doctor))
+            cardViewList.add(holder.card_doctor);
 
         holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
             @Override
             public void onItemSelectedListener(View view, int pos) {
-                //set white BG for all card not be selected
-                for (CardView cardView:cardViewList)
-                    cardView.setCardBackgroundColor(context.getColor(android.R.color.white)); //moze spowodowac blad
+                //Set background for all item not selected
+                for (CardView cardView: cardViewList)
+                {
+                    cardView.setCardBackgroundColor(
+                            context.getColor(android.R.color.white));
+                }
 
-                //set selected BG for only selected item
-                holder.card_clinic.setCardBackgroundColor(context.getColor(android.R.color.holo_blue_dark));
+                //set BG for selected
+                holder.card_doctor.setCardBackgroundColor(
+                        context.getColor(android.R.color.holo_blue_light)
+                );
 
-                //send Broadcast to tell Appointment Activity enable button next
+                //send local broadcast to enable button next
                 Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
-                intent.putExtra(Common.KEY_CLINIC_STORE, clinicsList.get(pos));
-                intent.putExtra(Common.KEY_STEP, 1);
+                intent.putExtra(Common.KEY_DOCTOR_SELECTED, doctorList.get(pos));
+                intent.putExtra(Common.KEY_STEP, 2);
                 localBroadcastManager.sendBroadcast(intent);
             }
         });
@@ -73,12 +76,13 @@ public class ClinicAdapter extends RecyclerView.Adapter<ClinicAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return clinicsList.size();
+        return doctorList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txt_clinic_name, txt_clinic_address;
-        CardView card_clinic;
+        TextView txt_doctor_name;
+        RatingBar ratingBar;
+        CardView card_doctor;
 
         IRecyclerItemSelectedListener iRecyclerItemSelectedListener;
 
@@ -89,9 +93,9 @@ public class ClinicAdapter extends RecyclerView.Adapter<ClinicAdapter.MyViewHold
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            card_clinic = (CardView)itemView.findViewById(R.id.card_clinic);
-            txt_clinic_address = (TextView) itemView.findViewById(R.id.txt_clinic_address);
-            txt_clinic_name = (TextView) itemView.findViewById(R.id.txt_clinic_name);
+            card_doctor = (CardView) itemView.findViewById(R.id.card_doctor);
+            txt_doctor_name = (TextView) itemView.findViewById(R.id.txt_doctor_name);
+            ratingBar = (RatingBar) itemView.findViewById(R.id.rtb_doctor);
 
             itemView.setOnClickListener(this);
         }

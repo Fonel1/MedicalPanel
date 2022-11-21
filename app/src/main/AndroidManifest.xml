@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalPanel">
         <activity
+            android:name=".Activity.UpdateInformationUser"
+            android:exported="false" />
+        <activity
             android:name=".Activity.AppointmentActivity"
             android:exported="false" />
         <activity
